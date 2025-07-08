@@ -17,6 +17,7 @@ def preprocess_module(module_code, raw_data, semester=1):
         }
     }
     """
+    print(raw_data)
     lesson_types = defaultdict(list)
 
     for sem_data in raw_data['semesterData']:

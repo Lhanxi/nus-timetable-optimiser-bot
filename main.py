@@ -40,11 +40,15 @@ if __name__ == "__main__":
     best_schedule, selected_modules = scheduler.find_best_schedule()
 
     # Step 4: Display result
-    print("\n✅ Selected Modules:", selected_modules)
-    print("\n📅 Optimized Timetable:")
-    for entry in best_schedule:
-        print(f"\nModule: {entry['module']}")
-        for l in entry["lessons"]:
-            print(f"  [{l['lessonType']}] {l['day']} {l['startTime']}-{l['endTime']} @ {l['venue']}")
+    if best_schedule:
+        print("\n✅ Selected Modules:", selected_modules)
+        print("\n📅 Optimized Timetable:")
+        for entry in best_schedule:
+            print(f"\nModule: {entry['module']}")
+            for l in entry["lessons"]:
+                print(f"  [{l['lessonType']}] {l['day']} {l['startTime']}-{l['endTime']} @ {l['venue']}")
+    else:
+        print("\n❌ No feasible timetable found. Try reducing the number of modules or relaxing constraints.")
+
     # print(f"\n📊 Total Days in School: {len(set(l['day'] for mod in best_schedule for l in mod['lessons']))}")
     # print(f"⏱️ Total Time on Campus This Week: {TimetableScheduler.time_to_minutes('0000') + sum([max([TimetableScheduler.time_to_minutes(l['endTime']) for l in mod['lessons']]) - min([TimetableScheduler.time_to_minutes(l['startTime']) for l in mod['lessons']]) for mod in best_schedule]) / 60:.1f} hours")

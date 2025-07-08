@@ -1,5 +1,8 @@
 import requests
+import os
 from dotenv import load_dotenv
+
+load_dotenv()
 
 ACAD_YEAR = os.getenv("ACAD_YEAR")
 
