@@ -18,6 +18,7 @@ from process_data import preprocess_module
 from scheduler_new import SchedulerMIP
 import uuid
 from dotenv import load_dotenv
+from render_schedule import draw_timetable
 import os
 
 load_dotenv()
@@ -67,7 +68,7 @@ async def done_compulsory(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = ReplyKeyboardMarkup(keyboard, one_time_keyboard=True, resize_keyboard=True)
     await update.message.reply_text(
         "✅ Now send *optional* modules using inline search.\n"
-        "🔍 Type: `@YourBot GE`, tap a result to send.\n"
+        "🔍 Type: `@nus_mod_bot GE`, tap a result to send.\n"
         "✅ Tap 'Done ✅' when finished.",
         reply_markup=reply_markup
     )
@@ -114,7 +115,21 @@ async def ask_semester(update: Update, context: ContextTypes.DEFAULT_TYPE):
             result += f"\n\n📘 {entry['module']}"
             for l in entry["lessons"]:
                 result += f"\n  [{l['lessonType']}] {l['day']} {l['startTime']}-{l['endTime']} @ {l['venue']}"
+
         await update.message.reply_text(result)
+
+        # Export as image and PDF
+        img_path, pdf_path = draw_timetable(
+            best_schedule,
+            semester=user_inputs["semester"],
+            acad_year=os.getenv("ACAD_YEAR", "2025/2026")  # fallback if not loaded
+        )
+        await update.message.reply_photo(photo=open(img_path, "rb"), caption="🖼️ Timetable Image")
+        await update.message.reply_document(document=open(pdf_path, "rb"), filename="schedule.pdf")
+
+        # Optional: clean up temp files
+        os.remove(img_path)
+        os.remove(pdf_path)
 
     return ConversationHandler.END
 
@@ -169,5 +184,5 @@ conv_handler = ConversationHandler(
 app.add_handler(conv_handler)
 app.add_handler(InlineQueryHandler(handle_inline_query))
 
-print("✅ Bot is running. Try typing @YourBot CS in any chat.")
+print("✅ Bot is running. Try typing /start.")
 app.run_polling()
