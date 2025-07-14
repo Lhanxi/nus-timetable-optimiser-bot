@@ -1,0 +1,31 @@
+# Allow everything under src/
+!src/
+!src/**
+
+# Allow Python files globally
+!*.py
+
+# Python-related ignores
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+env/
+
+# Environment & IDE config
+.env
+.vscode/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Testing
+.coverage
+htmlcov/
+pytest_cache/
